@@ -1,0 +1,6 @@
+{
+    "timestamp": "2025-02-03T15:11:41.039904",
+    "topic": "RusGeo/INC/117440521/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738588263,\r\n  \"X\": 0.6224,\r\n  \"Y\": -89.2936,\r\n  \"Z\": 0.3749\r\n}"
+}

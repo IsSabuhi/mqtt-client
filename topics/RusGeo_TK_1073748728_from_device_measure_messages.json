@@ -1,0 +1,42 @@
+{
+    "timestamp": "2025-02-03T15:26:00.401971",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738588263,\r\n  \"X\": 0.6224,\r\n  \"Y\": -89.2936,\r\n  \"Z\": 0.3749\r\n}"
+}
+{
+    "timestamp": "2025-02-03T15:26:53.265882",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738588263,\r\n  \"X\": 0.6224,\r\n  \"Y\": -89.2936,\r\n  \"Z\": 0.3749\r\n}"
+}
+{
+    "timestamp": "2025-02-03T15:27:00.082637",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738588263,\r\n  \"X\": 0.6224,\r\n  \"Y\": -89.2936,\r\n  \"Z\": 0.3749\r\n}"
+}
+{
+    "timestamp": "2025-02-03T15:27:00.971829",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738588263,\r\n  \"X\": 0.6224,\r\n  \"Y\": -89.2936,\r\n  \"Z\": 0.3749\r\n}"
+}
+{
+    "timestamp": "2025-02-03T15:27:23.598510",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738591083,\r\n  \"X\": 1.6726,\r\n  \"Y\": 88.1345,\r\n  \"Z\": -0.8431\r\n}"
+}
+{
+    "timestamp": "2025-02-03T15:29:59.440250",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738591083,\r\n  \"X\": 1.6726,\r\n  \"Y\": 88.1345,\r\n  \"Z\": -0.8431\r\n}"
+}
+{
+    "timestamp": "2025-02-03T15:30:44.423046",
+    "topic": "RusGeo/TK/1073748728/from_device/measure",
+    "qos": 0,
+    "message": "{\r\n  \"Time\": 1738591083,\r\n  \"X\": 1.6726,\r\n  \"Y\": 88.1345,\r\n  \"Z\": -0.8431\r\n}"
+}
