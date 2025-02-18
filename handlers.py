@@ -2,24 +2,37 @@ import json
 from datetime import datetime
 from db import Session, Sensor, Inclinometer, Device, Measurement
 from datetime import datetime
-from sqlalchemy.dialects.postgresql import insert
+import pytz
 
 session = Session()
 
+def convert_timestamp_to_datetime(ts, tz='UTC'):
+    timestamp = ts
+    timezone = pytz.timezone(tz)
+    dt_object = datetime.fromtimestamp(timestamp, tz=timezone)
+    return f"{dt_object.date()} {dt_object.time()}"
+
+
 def parse_and_save_data(session, topic, payload, qos):
     data = json.loads(payload)
+    # print(f"Received data: {data}")  
+
     parts = topic.split('/')
     device_serial = parts[2]
-
+    
     try:
-        stmt = insert(Device).values(serial_number=device_serial).on_conflict_do_nothing()
-        session.execute(stmt)
-        session.commit()
-
-        # Достаем устройство после вставки
         device = session.query(Device).filter_by(serial_number=device_serial).first()
+        print(f"Device found: {device}")
 
-        # Обновляем только если есть новые данные
+        if not device:
+            print(f"Device with serial number {device_serial} not found. Inserting...")
+            device = Device(serial_number=device_serial)
+            session.add(device)
+            session.flush() 
+            session.commit()
+
+        # print(f"Device after insert: {device}")
+
         update_data = {
             'firmware_version': data.get('FirmwareVersion'),
             'ubat1': data.get('Ubat1'),
@@ -29,55 +42,54 @@ def parse_and_save_data(session, topic, payload, qos):
             'logger_temp': data.get('LoggerTemp'),
             'cpu_temp': data.get('CpuTemp')
         }
+
         for key, value in update_data.items():
             if value is not None:
                 setattr(device, key, value)
 
         session.commit()
 
-    except Exception as e:
-        session.rollback()
-        print(f"Ошибка: {e}")
-    
-    if "measure" in topic:
-        if "TK" in topic:  
-            time = datetime.fromtimestamp(data['Time'])
-            quantity = data.get('Quantity')
-            
-            measurement = Measurement(
-                time=time,
-                quantity=quantity,
-                device_id=device_serial
-            )
-            
-            for key in [k for k in data.keys() if k.startswith('Sensor')]:
-                sensor_value, _, depth_info = data[key].partition('; ')
-                depth_delta, _, full_depth = depth_info.partition(', ')
-                
-                sensor = Sensor(
-                    sensor_name=key,
-                    value=float(sensor_value),
-                    depth_delta=depth_delta.split('=')[1],
-                    full_depth=full_depth.split('=')[1],
-                    measurement=measurement
-                )
-                measurement.sensors.append(sensor)
-            
-            session.add(measurement)
-            session.commit()
-
-        elif "INC" in topic: 
-            time = datetime.fromtimestamp(data['Time'])
+        if "INC" in topic:
+            time = convert_timestamp_to_datetime(data['Time'])
             inclinometer = Inclinometer(
                 time=time,
                 x=data['X'],
                 y=data['Y'],
                 z=data['Z'],
-                device_id=device.id
+                device_id=device.serial_number 
             )
             session.add(inclinometer)
             session.commit()
+
+        else: 
+            time = convert_timestamp_to_datetime(data['Time'])
+            quantity = data.get('Quantity')
             
+            measurement = Measurement(
+                time=time,
+                quantity=quantity,
+                device_id=device.serial_number 
+            )
+
+            for key in [k for k in data.keys() if k.startswith('Sensor')]:
+                if key in data:
+                    sensor_value, _, depth_info = data[key].partition('; ')
+                    depth_delta, _, full_depth = depth_info.partition(', ')
+                    sensor = Sensor(
+                        sensor_name=key,
+                        value=float(sensor_value),
+                        depth_delta=depth_delta.split('=')[1] if depth_delta else None,
+                        full_depth=full_depth.split('=')[1] if full_depth else None,
+                        measurement=measurement
+                    )
+                    measurement.sensors.append(sensor)
+            
+            session.add(measurement)
+            session.commit()
+
+    except Exception as e:
+        session.rollback()
+        print(f"Ошибка: {e}")
 
     print(f"{datetime.now()} Received message {payload} on topic '{topic}' with QoS {qos}")
     

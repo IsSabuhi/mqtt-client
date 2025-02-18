@@ -14,7 +14,7 @@ class Config:
 BROKER = os.environ.get('BROKER')
 PORT = int(os.environ.get('PORT', 1883)) 
 TOPICS = [
+    "RusGeo/+/+/from_device/status",
     "RusGeo/TK/+/from_device/measure",
-    "RusGeo/INC/+/from_device/measure",
-    "RusGeo/+/+/from_device/status"
+    "RusGeo/INC/+/from_device/measure"
 ]

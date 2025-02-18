@@ -38,9 +38,11 @@ class MqttClient:
             qos = msg.qos
 
             message_data = handle_message_topic(topic, payload, qos)
+            print('!!!!',message_data)
             if message_data:
                 log_info(f"Сообщение получено: Тема - {topic}, Payload - {payload}")
                 self.message_queue.put((topic, payload, qos))
+                print('self.message_queue!!', self.message_queue)
 
         self.client.on_connect = on_connect
         self.client.on_message = on_message
